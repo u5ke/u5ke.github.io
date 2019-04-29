@@ -66,3 +66,43 @@ https://docs.docker.com/install/linux/docker-ce/ubuntu/
         Hello from Docker!
         This message shows that your installation appears to be working correctly.
         (略)
+
+1. 一般ユーザでも`docker`コマンドが実行できるよう設定。
+
+        $ sudo groupadd docker
+        $ sudo usermod -aG docker $USER
+
+        コマンド実行後、再起動を実施。
+
+        $ docker run hello-world
+
+#### Dockerでwebアプリを実行
+以下のサイトの内容を実施。
+
+https://qiita.com/ksh-fthr/items/e914ff213791b7150008
+
+1. ディレクトリを作成
+
+        $ mkdir docker-hello-world
+
+1. 以下のファイルを作成
+
+        $ ls
+        Dockerfile  app.py  requirements.txt
+
+1. Dockerイメージを作成
+
+        $ docker build -t docker-hello-world .
+        $ docker image ls
+        REPOSITORY           TAG                 IMAGE ID            CREATED              SIZE
+        docker-hello-world   latest              c7002cee2ec3        About a minute ago   933MB
+        python               3.6                 5281251bf064        4 days ago           924MB
+
+1. Dockerイメージの起動
+
+        $ docker run -d -p 4000:80 docker-hello-world
+        $ curl http://localhost:4000
+        <h3>Hello World!</h3>⏎
+        $ docker ps
+        CONTAINER ID        IMAGE                COMMAND             CREATED              STATUS              PORTS                  NAMES
+        f19dd02ae2b8        docker-hello-world   "python app.py"     About a minute ago   Up About a minute   0.0.0.0:4000->80/tcp   infallible_torvalds
