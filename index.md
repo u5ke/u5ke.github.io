@@ -18,7 +18,7 @@ docker関連技術の理解と応用の検討
 ### vscodeをインストール
 #### 拡張機能
 - vscode-icons
-
+- Docker
 ### git をインストール
 ### Docker CEをインストール
 https://docs.docker.com/install/linux/docker-ce/ubuntu/
