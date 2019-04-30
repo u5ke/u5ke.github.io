@@ -2,14 +2,24 @@
 layout: default
 title: トップページ
 ---
+# 目的
+docker関連技術の理解と応用の検討
 
-# トップページです
-## 環境構築
-### 2019/4/30
-#### fishをインストール
-#### vscodeをインストール
-#### git をインストール
-#### Docker CEをインストール
+# 目標
+- dockerを用いた開発環境を構築する[済]
+- dockerを用いたアプリを動作させる[済]
+- 上記で使ったdockerコマンドを学習する
+- docker-composeの使い方を学習する
+- dockerリポジトリとしてgitlabを使ってみる
+
+# 環境構築
+### fishをインストール
+### vscodeをインストール
+#### 拡張機能
+- vscode-icons
+
+### git をインストール
+### Docker CEをインストール
 https://docs.docker.com/install/linux/docker-ce/ubuntu/
 
 1. リポジトリのアップデートは実施済み
@@ -76,8 +86,8 @@ https://docs.docker.com/install/linux/docker-ce/ubuntu/
 
         $ docker run hello-world
 
-#### Dockerでwebアプリを実行
-以下のサイトの内容を実施。
+## Dockerでpython webアプリを実行
+以下のサイトの内容を実施。ホストのubuntuではpythonのバージョンは3.6.7だが、docker上では3.6.8が動作することになる。python3.6.8上でflaskベースのwebアプリ(`app.py`)を動作させる。
 
 https://qiita.com/ksh-fthr/items/e914ff213791b7150008
 
@@ -101,8 +111,42 @@ https://qiita.com/ksh-fthr/items/e914ff213791b7150008
 1. Dockerイメージの起動
 
         $ docker run -d -p 4000:80 docker-hello-world
+
+1. 動作確認
+
         $ curl http://localhost:4000
         <h3>Hello World!</h3>⏎
         $ docker ps
         CONTAINER ID        IMAGE                COMMAND             CREATED              STATUS              PORTS                  NAMES
         f19dd02ae2b8        docker-hello-world   "python app.py"     About a minute ago   Up About a minute   0.0.0.0:4000->80/tcp   infallible_torvalds
+
+## dockerの学習
+### dockerコマンドの学習
+- `image`:
+- `build`:
+- `ps`:
+- `run`:
+- `stop`と`kill`:
+- `rm`:
+- `rmi`:
+- `save`と`export`:`save`はdockerイメージをtarアーカイブとして出力する。`export`はdockerコンテナのファイルシステムをtarアーカイブとして出力する。入力する際はそれぞれ`load`と`import`が対応する。
+- `commit`
+
+### Dockerfileの記法
+dockerイメージの作り方を宣言的に書いた手順書のようなもの。
+https://docs.docker.com/engine/reference/builder/
+
+- `FROM`:ベースイメージを指定する命令。管理された、大きすぎないイメージを選択すること。
+- `RUN`:OSのコマンドを実行する命令。既存イメージ上でコマンドを実行し、実行した結果をコミット(新しいイメージを作ること。イメージの更新？）する。`apt-get`等のインストールコマンドを指定することが一般的。
+- `CMD`:コンテナ起動時に実行するコマンドを指定する命令。
+- `EXPOSE`: コンテナが接続用にリッスンするポートを指定する命令。アプリケーションが一般的に使う伝統的なポートを指定するべき。Webアプリなら80等。外部からアクセスする際は`docker run -p ホストのポート:コンテナのポート`という書式で紐付ける。
+- `ENV`:環境変数を指定する命令。PostgreSQLの`PGDATA`のような、サービスが必要とする環境変数を指定する場合にも使える。
+- `ADD`と`COPY`:一般的には`COPY`が望ましい。ローカルファイルをコンテナにコピーするという用途に明確化されているため。`ADD`はtarアーカイブ展開やリモートURLにも対応しており多機能だが、一見して処理内容がわかりにくい。`ADD`はローカルのtarアーカイブをコンテナ内に展開する際に限定すること。
+- `WORKDIR`:Dockerfile内の命令実行時の作業ディレクトリを指定する命令。`WORKDIR`で設定したディレクトリが`docker run`時の作業ディレクトリになる。Dockerfileの記述がすっきするため積極的に使うこと。
+
+## メモ
+- javaのwebアプリのdockerイメージを作る場合、tomcatのdockerイメージを作り、webappsフォルダ配下に.warファイルを配置しておけばよさそう。ポートの設定はtomcatのserver.xmlとかspringのapplications.propertiesで？
+- 組み込みjettyやtomcatの場合はどこに配置してもよいのでそちらを推奨とするのもよさそう
+- dockerコンテナをオフライン環境に持っていく方法は。fatjarのようなコンテナの作り方。ベースイメージに`latest`が指定されているとビルドのたびに依存しているコンテナのバージョンが変わる危険性がある。一度ベースとしたものはオフラインに持って来てオフラインで管理する必要あり。`docker save`や`docker export`を活用？オフラインイメージの管理はgitlabがいいとのこと。
+https://blog.nownabe.com/2018/02/17/1259.html
+- dockerイメージの脆弱性検査？
