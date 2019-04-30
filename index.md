@@ -8,11 +8,12 @@ docker関連技術の理解と応用の検討
 # 目標
 - dockerを用いた開発環境を構築する[済]
 - dockerを用いたアプリを動作させる[済]
-- 上記で使ったdockerコマンドを学習する
-- docker-composeの使い方を学習する
+- 上記で使ったdockerコマンドを学習する[済]
 - dockerリポジトリとしてgitlabを使ってみる
+- docker-composeの使い方を学習する
 
 # 環境構築
+### ubuntu 18.04.2LTSをインストール
 ### fishをインストール
 ### vscodeをインストール
 #### 拡張機能
@@ -120,19 +121,20 @@ https://qiita.com/ksh-fthr/items/e914ff213791b7150008
         CONTAINER ID        IMAGE                COMMAND             CREATED              STATUS              PORTS                  NAMES
         f19dd02ae2b8        docker-hello-world   "python app.py"     About a minute ago   Up About a minute   0.0.0.0:4000->80/tcp   infallible_torvalds
 
-## dockerの学習
-### dockerコマンドの学習
-- `image`:
-- `build`:
-- `ps`:
-- `run`:
-- `stop`と`kill`:
-- `rm`:
-- `rmi`:
+# dockerの学習
+## dockerコマンドの学習
+- `image`:Dockerイメージを管理する。
+    - `docker images`: すべてのDockerイメージの一覧(`docker image ls`と同等)
+- `build`:DockerfileからDockerイメージを作成する。
+- `ps`:Dockerコンテナを管理する。
+- `run`:新しいDockerコンテナ上でコマンドを実行する。
+- `stop`と`kill`:`stop`はコンテナ内のプロセスに対し`SIGTERM`を送り、しばらくして`SIGKILL`を送る。`kill`はいきなり`SIGKILL`を送る。
+- `rm`:1つ以上のDockerコンテナを削除する。
+- `rmi`:1つ以上のDockerイメージを削除する。
 - `save`と`export`:`save`はdockerイメージをtarアーカイブとして出力する。`export`はdockerコンテナのファイルシステムをtarアーカイブとして出力する。入力する際はそれぞれ`load`と`import`が対応する。
-- `commit`
+- `commit`:コンテナに対する変更からイメージを作成する。
 
-### Dockerfileの記法
+## Dockerfileの記法
 dockerイメージの作り方を宣言的に書いた手順書のようなもの。
 https://docs.docker.com/engine/reference/builder/
 
@@ -144,7 +146,28 @@ https://docs.docker.com/engine/reference/builder/
 - `ADD`と`COPY`:一般的には`COPY`が望ましい。ローカルファイルをコンテナにコピーするという用途に明確化されているため。`ADD`はtarアーカイブ展開やリモートURLにも対応しており多機能だが、一見して処理内容がわかりにくい。`ADD`はローカルのtarアーカイブをコンテナ内に展開する際に限定すること。
 - `WORKDIR`:Dockerfile内の命令実行時の作業ディレクトリを指定する命令。`WORKDIR`で設定したディレクトリが`docker run`時の作業ディレクトリになる。Dockerfileの記述がすっきするため積極的に使うこと。
 
-## メモ
+# Dockerリポジトリの作成
+## Gitlabの導入、設定
+1. www.gitlab.comにユーザ登録
+1. 以下のプロジェクトを作成する
+    - https://gitlab.com/u5ke/test
+    - Private
+
+## Dockerイメージの作成
+Python Webアプリのサンプルをsaveしてdockerイメージにする。
+
+        $ docker run -d -p 4000:80 docker-hello-world
+        $ docker images
+        REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
+        docker-hello-world   latest              c7002cee2ec3        16 hours ago        933MB
+        python               3.6                 5281251bf064        5 days ago          924MB
+        $ docker save --output docker-hello-world c7002cee2ec3
+
+## Gitlabへの登録
+GitlabへDockerイメージを登録する。\
+**`docker login`が成功せず。調査要**
+
+# メモ
 - javaのwebアプリのdockerイメージを作る場合、tomcatのdockerイメージを作り、webappsフォルダ配下に.warファイルを配置しておけばよさそう。ポートの設定はtomcatのserver.xmlとかspringのapplications.propertiesで？
 - 組み込みjettyやtomcatの場合はどこに配置してもよいのでそちらを推奨とするのもよさそう
 - dockerコンテナをオフライン環境に持っていく方法は。fatjarのようなコンテナの作り方。ベースイメージに`latest`が指定されているとビルドのたびに依存しているコンテナのバージョンが変わる危険性がある。一度ベースとしたものはオフラインに持って来てオフラインで管理する必要あり。`docker save`や`docker export`を活用？オフラインイメージの管理はgitlabがいいとのこと。
