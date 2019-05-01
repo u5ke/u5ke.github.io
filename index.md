@@ -174,3 +174,6 @@ GitlabへDockerイメージを登録する。\
 - dockerコンテナをオフライン環境に持っていく方法は。fatjarのようなコンテナの作り方。ベースイメージに`latest`が指定されているとビルドのたびに依存しているコンテナのバージョンが変わる危険性がある。一度ベースとしたものはオフラインに持って来てオフラインで管理する必要あり。`docker save`や`docker export`を活用？オフラインイメージの管理はgitlabがいいとのこと。
 https://blog.nownabe.com/2018/02/17/1259.html
 - dockerイメージの脆弱性検査？
+- noderedのオリジナルノードはnpmモジュールで作る必要がある。
+https://qiita.com/zuhito/items/1c65fdbb3743d9f87edd
+- コンテナを停止しても、コンテナ内の領域にデータは残る。コンテナ＝マシンと同等。
