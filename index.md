@@ -177,3 +177,4 @@ https://blog.nownabe.com/2018/02/17/1259.html
 - noderedのオリジナルノードはnpmモジュールで作る必要がある。
 https://qiita.com/zuhito/items/1c65fdbb3743d9f87edd
 - コンテナを停止しても、コンテナ内の領域にデータは残る。コンテナ＝マシンと同等。
+- `docker run -v`でホストのディレクトリと紐付ける際は、ホストのディレクトリの権限に注意。`ll`、`chgrp`や`docker run --user`を併用して正しい権限を付与すること。
