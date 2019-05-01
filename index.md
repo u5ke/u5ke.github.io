@@ -133,6 +133,7 @@ https://qiita.com/ksh-fthr/items/e914ff213791b7150008
 - `rmi`:1つ以上のDockerイメージを削除する。
 - `save`と`export`:`save`はdockerイメージをtarアーカイブとして出力する。`export`はdockerコンテナのファイルシステムをtarアーカイブとして出力する。入力する際はそれぞれ`load`と`import`が対応する。
 - `commit`:コンテナに対する変更からイメージを作成する。
+- `tag`:dockerイメージに対してタグ付けを行う。構成名をスラッシュ区切りで指定する。デフォルトのタグ名は`latest`。プライベートリポジトリに登録する際はホスト名やポートを指定する。デフォルトのホスト名は`registry-1.docker.io`。
 
 ## Dockerfileの記法
 dockerイメージの作り方を宣言的に書いた手順書のようなもの。
