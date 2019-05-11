@@ -9,7 +9,7 @@ docker関連技術の理解と応用の検討
 - dockerを用いた開発環境を構築する[済]
 - dockerを用いたアプリを動作させる[済]
 - 上記で使ったdockerコマンドを学習する[済]
-- dockerリポジトリとしてgitlabを使ってみる
+- dockerリポジトリとしてgitlabを使ってみる[済]
 - docker-composeの使い方を学習する
 
 # 環境構築
