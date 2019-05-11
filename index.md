@@ -51,7 +51,7 @@ https://docs.docker.com/install/linux/docker-ce/ubuntu/
         ヒット:4 http://packages.microsoft.com/repos/vscode stable InRelease                                                            
         無視:5 https://download.docker.com/linux/ubuntu (lsb_release InRelease                                                       
         取得:6 https://download.docker.com/linux/ubuntu bionic InRelease [64.4 kB]                     
-        取得:7 http://security.ubuntu.com/ubuntu bionic-security InRelease [88.7 kB]
+        取得:7 http://s ecurity.ubuntu.com/ubuntu bionic-security InRelease [88.7 kB]
         エラー:8 https://download.docker.com/linux/ubuntu (lsb_release Release
         404  Not Found [IP: 13.249.146.94 443]
         取得:9 https://download.docker.com/linux/ubuntu bionic/stable amd64 Packages [6,046 B]
@@ -240,7 +240,7 @@ registry.gitlab.com/u5ke/test/python   3.6                 5281251bf064        2
 ```
 
 # メモ
-- javaのwebアプリのdockerイメージを作る場合docker tag python:3.6 registry.gitlab.com/u5ke/test/p、tomcatのdockerイメージを作り、webappsフォルダ配下に.warファイルを配置しておけばよさそう。ポートの設定はtomcatのserver.xmlとかspringのapplications.propertiesで？
+- javaのwebアプリのdockerイメージを作る場合、tomcatのdockerイメージを作り、webappsフォルダ配下に.warファイルを配置しておけばよさそう。ポートの設定はtomcatのserver.xmlとかspringのapplications.propertiesで？
     - 組み込みjettyやtomcatの場合はどこに配置してもよいのでそちらを推奨とするのもよさそう
     - javaアプリをdocker化するツール=jib。mavenで使える。
 - dockerコンテナをオフライン環境に持っていく方法は。fatjarのようなコンテナの作り方。ベースイメージに`latest`が指定されているとビルドのたびに依存しているコンテナのバージョンが変わる危険性がある。一度ベースとしたものはオフラインに持って来てオフラインで管理する必要あり。`docker save`や`docker export`を活用？オフラインイメージの管理はgitlabがいいとのこと。
