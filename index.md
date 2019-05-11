@@ -230,6 +230,12 @@ GitlabへDockerイメージを登録する。
         latest: Pulling from u5ke/test
         Digest: sha256:716ef1225a40ede07804c5b88898319c76b616554795a797a8565e73718a5756
         Status: Downloaded newer image for registry.gitlab.com/u5ke/test:latest
+        $ docker images
+        REPOSITORY                             TAG                 IMAGE ID            CREATED             SIZE
+        docker-hello-world                     python-app          d5936d915e43        11 days ago         933MB
+        registry.gitlab.com/u5ke/test          latest              d5936d915e43        11 days ago         933MB
+        python                                 3.6                 5281251bf064        2 weeks ago         924MB
+        registry.gitlab.com/u5ke/test/python   3.6                 5281251bf064        2 weeks ago         924MB
 
 # メモ
 - javaのwebアプリのdockerイメージを作る場合docker tag python:3.6 registry.gitlab.com/u5ke/test/p、tomcatのdockerイメージを作り、webappsフォルダ配下に.warファイルを配置しておけばよさそう。ポートの設定はtomcatのserver.xmlとかspringのapplications.propertiesで？
