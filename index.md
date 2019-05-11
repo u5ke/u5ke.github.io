@@ -165,7 +165,7 @@ Python Webアプリのサンプルをsaveしてdockerイメージにする。
         $ docker save --output docker-hello-world c7002cee2ec3
 
 ## Gitlabへの登録
-GitlabへDockerイメージを登録する。\
+GitlabへDockerイメージを登録する。  
 **`docker login`が成功せず。調査要**
 
 # メモ
@@ -181,8 +181,8 @@ https://qiita.com/zuhito/items/1c65fdbb3743d9f87edd
 - `docker run -v`でホストのディレクトリと紐付ける際は、ホストのディレクトリの権限に注意。`ll`、`chgrp`や`docker run --user`を併用して正しい権限を付与すること。
 - kubernetesを使わない使い方も用意すべきではないか。必要な技術が多くなるほどハードルが上がってしまう。同様にdockerfileも必須ではない。まずは開発環境でdockerを使って慣れてもらう等が必要ではないか。VM環境との共存の余地を残すことも重要。ソフトランディングできないと使ってもらえない。
 - 既存アプリをdocker化する手順を整理する必要あり。
-    - 役割に応じたコンテナの分離。\
+    - 役割に応じたコンテナの分離。  
       Tomcat+JavaのWebアプリ+PostgreSQLのような構成だとコンテナは2つ(Tomcat+JavaのWebアプリと、PostgreSQL)になる。
     - コンテナ上で開発し、イメージを作成する。(`docker commit`やDockerfile)
-    - エントリポイントを考える。\
+    - エントリポイントを考える。  
       アプリコンテナとPostgreSQLコンテナを通信させるためには、PostgreSQLコンテナに`--name`オプションで名前をつけ、その名前をアプリコンテナから`--link`オプションで紐付けることで利用可能。
