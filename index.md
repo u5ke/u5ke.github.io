@@ -217,6 +217,7 @@ GitlabへDockerイメージを登録する。
         604829a174eb: Mounted from u5ke/test 
         fbb641a8b943: Mounted from u5ke/test 
         3.6: digest: sha256:128a8dc57c2cff9e4ff2e4e7a66612e179aff6e7043ae7f80f3ee55b8bb7baec size: 2218
+
 ## Gitlabからpullする
 
         $ docker images
