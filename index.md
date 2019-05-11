@@ -145,7 +145,7 @@ https://docs.docker.com/engine/reference/builder/
 - `EXPOSE`: コンテナが接続用にリッスンするポートを指定する命令。アプリケーションが一般的に使う伝統的なポートを指定するべき。Webアプリなら80等。外部からアクセスする際は`docker run -p ホストのポート:コンテナのポート`という書式で紐付ける。
 - `ENV`:環境変数を指定する命令。PostgreSQLの`PGDATA`のような、サービスが必要とする環境変数を指定する場合にも使える。
 - `ADD`と`COPY`:一般的には`COPY`が望ましい。ローカルファイルをコンテナにコピーするという用途に明確化されているため。`ADD`はtarアーカイブ展開やリモートURLにも対応しており多機能だが、一見して処理内容がわかりにくい。`ADD`はローカルのtarアーカイブをコンテナ内に展開する際に限定すること。
-- `WORKDIR`:Dockerfile内の命令実行時の作業ディレクトリを指定する命令。`WORKDIR`で設定したディレクトリが`docker run`時の作業ディレクトリになる。Dockerfileの記述がすっきするため積極的に使うこと。
+- `WORKDIR`:Dockerfile内の命令実行時の作業ディレクトリを指定する命令。`WORKDIR`で設定したディレクトリが`docker run`時の作業ディレクトリになる。Dockerfileの記述がすっきりするため積極的に使うこと。
 
 # Dockerリポジトリの作成
 ## Gitlabの導入、設定
@@ -154,22 +154,84 @@ https://docs.docker.com/engine/reference/builder/
     - https://gitlab.com/u5ke/test
     - Private
 
-## Dockerイメージの作成
-Python Webアプリのサンプルをsaveしてdockerイメージにする。
-
-        $ docker run -d -p 4000:80 docker-hello-world
-        $ docker images
-        REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
-        docker-hello-world   latest              c7002cee2ec3        16 hours ago        933MB
-        python               3.6                 5281251bf064        5 days ago          924MB
-        $ docker save --output docker-hello-world c7002cee2ec3
-
 ## Gitlabへの登録
 GitlabへDockerイメージを登録する。  
-**`docker login`が成功せず。調査要**
+**`docker login`が成功せず。調査要**  
+→解決した。githubの認証情報を利用してgitlabに登録していたが、`docker login`で使える認証情報ではなかったと思われる。account settingsでパスワードを登録したところ`docker login`でのログインに成功した。
+
+1. Gitlabへログインする。
+
+        $ docker login registry.gitlab.com
+        Login Succeeded
+
+1. Dockerイメージにタグ付けする
+
+        $ docker images
+        REPOSITORY                TAG                 IMAGE ID            CREATED             SIZE
+        docker-hello-world        python-app          d5936d915e43        11 days ago         933MB
+        python                    3.6                 5281251bf064        2 weeks ago         924MB
+        $ docker tag docker-hello-world:python-app registry.gitlab.com/u5ke/test
+        $ docker images
+        REPOSITORY                      TAG                 IMAGE ID            CREATED             SIZE
+        docker-hello-world              python-app          d5936d915e43        11 days ago         933MB
+        registry.gitlab.com/u5ke/test   latest              d5936d915e43        11 days ago         933MB
+        python                          3.6                 5281251bf064        2 weeks ago         924MB
+
+1. GitlabにDockerイメージをpushする。
+
+        $ docker push registry.gitlab.com/u5ke/test
+        The push refers to repository [registry.gitlab.com/u5ke/test]
+        0a87f2caa24c: Pushed 
+        8469a017122f: Pushed 
+        d3dce31b2149: Pushed 
+        5d5d86989c42: Pushed 
+        8296c34d0641: Pushed 
+        4d29b148a147: Pushed 
+        bd5afbfde642: Pushed 
+        0fe19df8b8f8: Pushed 
+        b17cc31e431b: Pushed 
+        12cb127eee44: Pushed 
+        604829a174eb: Pushed 
+        fbb641a8b943: Pushed 
+        latest: digest: sha256:716ef1225a40ede07804c5b88898319c76b616554795a797a8565e73718a5756 size: 2843
+
+### 参考
+何個でもpushできる。
+
+        $ docker tag python:3.6 registry.gitlab.com/u5ke/test/python:3.6
+        $ docker images
+        REPOSITORY                             TAG                 IMAGE ID            CREATED             SIZE
+        docker-hello-world                     python-app          d5936d915e43        11 days ago         933MB
+        registry.gitlab.com/u5ke/test          latest              d5936d915e43        11 days ago         933MB
+        python                                 3.6                 5281251bf064        2 weeks ago         924MB
+        registry.gitlab.com/u5ke/test/python   3.6                 5281251bf064        2 weeks ago         924MB
+        $ docker push registry.gitlab.com/u5ke/test/python:3.6
+        The push refers to repository [registry.gitlab.com/u5ke/test/python]
+        5d5d86989c42: Mounted from u5ke/test 
+        8296c34d0641: Mounted from u5ke/test 
+        4d29b148a147: Mounted from u5ke/test 
+        bd5afbfde642: Mounted from u5ke/test 
+        0fe19df8b8f8: Mounted from u5ke/test 
+        b17cc31e431b: Mounted from u5ke/test 
+        12cb127eee44: Mounted from u5ke/test 
+        604829a174eb: Mounted from u5ke/test 
+        fbb641a8b943: Mounted from u5ke/test 
+        3.6: digest: sha256:128a8dc57c2cff9e4ff2e4e7a66612e179aff6e7043ae7f80f3ee55b8bb7baec size: 2218
+## Gitlabからpullする
+
+        $ docker images
+        REPOSITORY                             TAG                 IMAGE ID            CREATED             SIZE
+        docker-hello-world                     python-app          d5936d915e43        11 days ago         933MB
+        python                                 3.6                 5281251bf064        2 weeks ago         924MB
+        registry.gitlab.com/u5ke/test/python   3.6                 5281251bf064        2 weeks ago         924MB
+        $ docker pull registry.gitlab.com/u5ke/test
+        Using default tag: latest
+        latest: Pulling from u5ke/test
+        Digest: sha256:716ef1225a40ede07804c5b88898319c76b616554795a797a8565e73718a5756
+        Status: Downloaded newer image for registry.gitlab.com/u5ke/test:latest
 
 # メモ
-- javaのwebアプリのdockerイメージを作る場合、tomcatのdockerイメージを作り、webappsフォルダ配下に.warファイルを配置しておけばよさそう。ポートの設定はtomcatのserver.xmlとかspringのapplications.propertiesで？
+- javaのwebアプリのdockerイメージを作る場合docker tag python:3.6 registry.gitlab.com/u5ke/test/p、tomcatのdockerイメージを作り、webappsフォルダ配下に.warファイルを配置しておけばよさそう。ポートの設定はtomcatのserver.xmlとかspringのapplications.propertiesで？
     - 組み込みjettyやtomcatの場合はどこに配置してもよいのでそちらを推奨とするのもよさそう
     - javaアプリをdocker化するツール=jib。mavenで使える。
 - dockerコンテナをオフライン環境に持っていく方法は。fatjarのようなコンテナの作り方。ベースイメージに`latest`が指定されているとビルドのたびに依存しているコンテナのバージョンが変わる危険性がある。一度ベースとしたものはオフラインに持って来てオフラインで管理する必要あり。`docker save`や`docker export`を活用？オフラインイメージの管理はgitlabがいいとのこと。
