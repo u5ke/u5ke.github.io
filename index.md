@@ -11,6 +11,7 @@ docker関連技術の理解と応用の検討
 - 上記で使ったdockerコマンドを学習する[済]
 - dockerリポジトリとしてgitlabを使ってみる[済]
 - docker-composeの使い方を学習する
+- elasticsearchの使い方を学習する
 
 # 環境構築
 ### ubuntu 18.04.2LTSをインストール
@@ -238,6 +239,20 @@ registry.gitlab.com/u5ke/test          latest              d5936d915e43        1
 python                                 3.6                 5281251bf064        2 weeks ago         924MB
 registry.gitlab.com/u5ke/test/python   3.6                 5281251bf064        2 weeks ago         924MB
 ```
+# elasticsearchの学習
+https://blog.shibayu36.org/entry/2016/08/31/110000
+## mapping
+### datatype `type`
+- `text`: 全文検索対象。`analyzer`プロパティで形態素解析器等を設定する。ソートやaggregation(集約して最大値等を求める処理)には使用されない。significant text aggregationは除く。
+- `keyword`：全文検索対象でない。`analyzer`は設定できない。メールアドレスやホスト名、タグのようにフィルタリングで使うような値に設定する。exact matchより柔軟にしたい場合は`normalizer`を使う。
+- `date`：Elasticsearchにおいてはフォーマットされた日付を含む文字列、milliseconds-since-the-epochで表現されるlong、seconds-since-the-epochで表現されるintegerのこと。内部的にはUTCに変換されmilliseconds-since-the-epochで表現される`long`として格納される。
+- `long`：
+- `double`：
+- `boolean`：
+
+## bulk API 
+https://www.elastic.co/guide/en/elasticsearch/reference/7.2/docs-bulk.html
+
 
 # メモ
 - javaのwebアプリのdockerイメージを作る場合、tomcatのdockerイメージを作り、webappsフォルダ配下に.warファイルを配置しておけばよさそう。ポートの設定はtomcatのserver.xmlとかspringのapplications.propertiesで？
