@@ -242,6 +242,7 @@ registry.gitlab.com/u5ke/test/python   3.6                 5281251bf064        2
 # elasticsearchの学習
 https://blog.shibayu36.org/entry/2016/08/31/110000
 ## mapping
+indexだけ作成して登録してもdynamic mappingによってmappingは作られるが、大半の場合は設計が必要になる。
 ### datatype `type`
 - `text`: 全文検索対象。`analyzer`プロパティで形態素解析器等を設定する。ソートやaggregation(集約して最大値等を求める処理)には使用されない。significant text aggregationは除く。
 - `keyword`：全文検索対象でない。`analyzer`は設定できない。メールアドレスやホスト名、タグのようにフィルタリングで使うような値に設定する。exact matchより柔軟にしたい場合は`normalizer`を使う。
